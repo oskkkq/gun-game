@@ -1,0 +1,1361 @@
+<Button onClick={handleStart} className="text-lg px-6 py-2 w-full bg-red-600 hover:bg-red-700">
+  게임 시작
+</Button>
+<input
+  type="text"
+  placeholder="닉네임을 입력하세요"
+  value={nickname}
+  onChange={(e) => setNickname(e.target.value)}
+  className="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none"
+/>
+<p className="text-lg text-gray-300">
+  제한 시간 안에 화면에 나타나는 빨간 타겟을 최대한 많이 클릭하세요!<br />
+  타겟을 맞추면 점수가 올라가고, 게임이 끝나면 최고 점수에 도전할 수 있어요. <br />
+  총소리와 스킨도 적용되어 몰입감 있는 슈팅 게임! 🔫💥
+</p>
+<h1>🔫 총게임 로비</h1>
+<p className="text-lg">...</p>  ← 여기에 설명 추가
+<input type="text" ... />
+<Button>게임 시작</Button>
+<div
+  className="relative w-full max-w-[90vw] h-[70vh] border border-gray-700 bg-cover bg-center rounded-xl overflow-hidden"
+  style={{ backgroundImage: "url('/images/map1.jpg')" }}
+>
+if (shootSoundRef.current) {
+  shootSoundRef.current.currentTime = 0;
+  shootSoundRef.current.play();
+}
+const handleShoot = (id, e) => {
+  if (shootSoundRef.current) {
+    shootSoundRef.current.currentTime = 0;
+    shootSoundRef.current.play();
+  }
+
+  // 클릭한 좌표와 타겟 중심 계산
+  const targetElement = e.target.getBoundingClientRect();
+  const clickX = e.clientX;
+  const clickY = e.clientY;
+  const centerX = targetElement.left + targetElement.width / 2;
+  const centerY = targetElement.top + targetElement.height / 2;
+  const distance = Math.hypot(clickX - centerX, clickY - centerY);
+const handleShoot = (id, e) => {
+  if (shootSoundRef.current) {
+    shootSoundRef.current.currentTime = 0;
+    shootSoundRef.current.play();
+  }
+
+  // 클릭한 좌표와 타겟 중심 계산
+  const targetElement = e.target.getBoundingClientRect();
+  const clickX = e.clientX;
+  const clickY = e.clientY;
+  const centerX = targetElement.left + targetElement.width / 2;
+  const centerY = targetElement.top + targetElement.height / 2;
+  const distance = Math.hypot(clickX - centerX, clickY - centerY);
+
+  // 판정
+  if (distance < 10) {
+    console.log(\"헤드샷! 💥\");
+    setScore((prev) => prev + 3);
+  } else {
+    console.log(\"몸통샷 🎯\");
+    setScore((prev) => prev + 1);
+  }
+
+  setTargets((prev) => prev.filter((t) => t.id !== id));
+};
+const targetElement = e.target.getBoundingClientRect();
+const clickX = e.clientX;
+const clickY = e.clientY;
+const centerX = targetElement.left + targetElement.width / 2;
+const centerY = targetElement.top + targetElement.height / 2;
+const distance = Math.hypot(clickX - centerX, clickY - centerY);
+
+if (distance < 10) {
+  // 💥 헤드샷 판정!
+  setScore((prev) => prev + 3);
+} else {
+  // 🎯 몸통샷
+  setScore((prev) => prev + 1);
+}
+<div className="mt-4">
+  <label className="text-sm">총기 선택:</label>
+  <select
+    value={selectedGun}
+    onChange={(e) => setSelectedGun(e.target.value)}
+    className="ml-2 px-2 py-1 rounded bg-gray-800 text-white"
+  >
+    <option value="pistol">🔫 권총</option>
+    <option value="rifle">🔫 소총</option>
+    <option value="shotgun">🔫 샷건</option>
+    <option value="sniper">🎯 저격총</option>
+  </select>
+</div>
+const guns = {
+  pistol: { damage: 1, recoil: 5, sound: "/sounds/pistol.mp3" },
+  rifle: { damage: 1, recoil: 10, sound: "/sounds/rifle.mp3" },
+  shotgun: { damage: 2, recoil: 20, sound: "/sounds/shotgun.mp3" },
+  sniper: { damage: 3, recoil: 8, sound: "/sounds/sniper.mp3" },
+};
+let shootingInterval = null;
+
+canvas.addEventListener("mousedown", (e) => {
+  if (selectedGun === "rifle") {
+    shoot(e); // 즉시 한 발
+    shootingInterval = setInterval(() => shoot(e), 200); // 0.2초 간격
+  } else {
+    shoot(e);
+  }
+});
+
+canvas.addEventListener("mouseup", () => {
+  if (shootingInterval) clearInterval(shootingInterval);
+});
+
+canvas.addEventListener("mouseleave", () => {
+  if (shootingInterval) clearInterval(shootingInterval);
+});
+const guns = {
+  pistol:  { damage: 1, recoil: 5,  sound: "/sounds/pistol.mp3",  ammo: 12, reloadTime: 1000 },
+  rifle:   { damage: 1, recoil: 10, sound: "/sounds/rifle.mp3",   ammo: 30, reloadTime: 1500 },
+  shotgun: { damage: 2, recoil: 20, sound: "/sounds/shotgun.mp3", ammo: 6,  reloadTime: 2000 },
+  sniper:  { damage: 3, recoil: 8,  sound: "/sounds/sniper.mp3",  ammo: 5,  reloadTime: 2500 },
+};
+  function shoot(e) {
+  if (isReloading || currentAmmo <= 0) return;
+
+  currentAmmo--;
+  playSound(guns[selectedGun].sound);
+  applyRecoil();
+  // ... 나머지 발사 처리
+
+  updateAmmoUI(); // 탄약 UI 업데이트
+}document.addEventListener("keydown", (e) => {
+  if (e.key === "r" || e.key === "R") {
+    reloadGun();
+  }
+});
+
+function reloadGun() {
+  if (isReloading || currentAmmo === guns[selectedGun].ammo) return;
+
+  isReloading = true;
+  showReloadUI(); // 💡 "Reloading..." 표시
+  setTimeout(() => {
+    currentAmmo = guns[selectedGun].ammo;
+    isReloading = false;
+    updateAmmoUI();
+    hideReloadUI();
+  }, guns[selectedGun].reloadTime);
+}
+[ 🔫 Rifle ]   12 / 30
+🔄 Reloading...if (currentAmmo <= 0 || isReloading) return;
+currentAmmo--;
+<div id="ammo" class="absolute bottom-4 right-4 text-white text-xl bg-black/60 px-3 py-1 rounded">
+  🔫 Rifle — 12 / 30
+</div>
+function updateAmmoUI() {
+  ammoEl.innerText = `🔫 ${selectedGunName} — ${currentAmmo} / ${guns[selectedGun].ammo}`;
+}
+function shoot(e) {
+  if (isReloading || currentAmmo <= 0) {
+    if (currentAmmo <= 0) {
+      playSound("/sounds/empty.mp3"); // 🔇 딸깍 소리!
+      showNoAmmoMessage(); // ⚠️ "탄약 없음!" 표시 (선택)
+    }
+    return; // 발사 차단
+  }
+
+  currentAmmo--;
+  playSound(guns[selectedGun].sound);
+  // ... 나머지 발사 처리
+}
+function playSound(src) {
+  const audio = new Audio(src);
+  audio.play();
+}
+function showNoAmmoMessage() {
+  const msg = document.createElement("div");
+  msg.innerText = "🔴 탄약 없음!";
+  msg.className = "absolute text-red-500 text-2xl top-10 left-1/2 -translate-x-1/2 animate-pulse";
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 1000);
+}
+function shoot(e) {
+  if (isReloading || currentAmmo <= 0) {
+    if (currentAmmo <= 0) {
+      playSound("/sounds/empty.mp3");
+      showNoAmmoMessage();
+    }
+    return; // ❌ 리로드 중이거나 탄약 없으면 발사 안 됨
+  }
+
+  // ⏱️ 발사 가능할 때만 실행됨
+  currentAmmo--;
+  playSound(guns[selectedGun].sound);
+  applyRecoil();
+  // ...
+}
+function reloadGun() {
+  if (isReloading || currentAmmo === guns[selectedGun].ammo) return;
+
+  isReloading = true; // 🚫 발사 차단 시작
+  showReloadUI();     // 🔄 "Reloading..." 표시
+
+  setTimeout(() => {
+    currentAmmo = guns[selectedGun].ammo;
+    isReloading = false; // ✅ 발사 가능
+    updateAmmoUI();
+    hideReloadUI();
+  }, guns[selectedGun].reloadTime);
+}
+<div id="reloadAnim" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                         text-white text-3xl font-bold animate-pulse z-50">
+  🔄 RELOADING...
+</div>
+/* Tailwind로 작성된 경우, 이미 animate-pulse 사용 가능 */
+function showReloadUI() {
+  document.getElementById("reloadAnim").classList.remove("hidden");
+}
+
+function hideReloadUI() {
+  document.getElementById("reloadAnim").classList.add("hidden");
+}
+<div id="reloadBarWrapper" class="hidden absolute bottom-20 left-1/2 -translate-x-1/2 w-48 h-4 bg-gray-700 rounded overflow-hidden z-50">
+  <div id="reloadBar" class="h-full bg-green-400 w-0 transition-all duration-100"></div>
+</div>
+function showReloadUI() {
+  const wrapper = document.getElementById("reloadBarWrapper");
+  const bar = document.getElementById("reloadBar");
+
+  wrapper.classList.remove("hidden");
+  bar.style.width = "0%";
+
+  // 총기마다 리로드 시간 다르게 적용
+  const reloadTime = guns[selectedGun].reloadTime;
+
+  // 애니메이션 시작
+  bar.style.transition = `width ${reloadTime}ms linear`;
+  setTimeout(() => {
+    bar.style.width = "100%";
+  }, 10); // 트리거용 딜레이
+}
+
+function hideReloadUI() {
+  document.getElementById("reloadBarWrapper").classList.add("hidden");
+}
+function reloadGun() {
+  if (isReloading || currentAmmo === guns[selectedGun].ammo) return;
+
+  isReloading = true;
+  showReloadUI();
+
+  setTimeout(() => {
+    currentAmmo = guns[selectedGun].ammo;
+    isReloading = false;
+    hideReloadUI();
+    updateAmmoUI();
+  }, guns[selectedGun].reloadTime);
+}
+🔫 Rifle  —  0 / 30
+
+[ ▓▓▓▓▓▓▓▓░░░░░░ ]  ← 재장전 중...
+<img id="gunImage" src="/images/rifle.png" class="absolute bottom-0 right-10 h-32 transition-transform duration-300" />
+function showReloadUI() {
+  const bar = document.getElementById("reloadBar");
+  const gun = document.getElementById("gunImage");
+
+  document.getElementById("reloadBarWrapper").classList.remove("hidden");
+  bar.style.width = "0%";
+
+  const reloadTime = guns[selectedGun].reloadTime;
+
+  // 리로드 애니메이션 시작 (총기 아래로)
+  gun.style.transform = "translateY(60px)";
+  gun.style.opacity = "0.5";
+
+  bar.style.transition = `width ${reloadTime}ms linear`;
+  setTimeout(() => {
+    bar.style.width = "100%";
+  }, 10);
+}
+function hideReloadUI() {
+  const gun = document.getElementById("gunImage");
+
+  document.getElementById("reloadBarWrapper").classList.add("hidden");
+
+  // 총기 다시 원위치
+  gun.style.transform = "translateY(0)";
+  gun.style.opacity = "1";
+}
+function showReloadUI() {
+  const gun = document.getElementById("gunImage");
+  gun.style.transform = "translateY(60px)";
+  gun.style.opacity = "0.5"; // 살짝 어두워지게 (선택)
+
+  document.getElementById("reloadBarWrapper").classList.remove("hidden");
+
+  const bar = document.getElementById("reloadBar");
+  const reloadTime = guns[selectedGun].reloadTime;
+
+  bar.style.transition = `width ${reloadTime}ms linear`;
+  bar.style.width = "0%";
+  setTimeout(() => {
+    bar.style.width = "100%";
+  }, 10);
+}
+function hideReloadUI() {
+  const gun = document.getElementById("gunImage");
+  gun.style.transform = "translateY(0)";
+  gun.style.opacity = "1";
+
+  document.getElementById("reloadBarWrapper").classList.add("hidden");
+}
+function reloadGun() {
+  if (isReloading || currentAmmo === guns[selectedGun].ammo) return;
+
+  isReloading = true;
+  showReloadUI();
+
+  setTimeout(() => {
+    currentAmmo = guns[selectedGun].ammo;
+    isReloading = false;
+    hideReloadUI(); // 🔥 여기서 복귀
+    updateAmmoUI();
+  }, guns[selectedGun].reloadTime);
+}
+<!-- 총알 요소: JS에서 생성해서 움직이게 함 -->
+<style>
+  .bullet {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: yellow;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+  }
+</style>
+function fireBullet(targetX, targetY) {
+  const bullet = document.createElement("div");
+  bullet.className = "bullet";
+
+  // 화면 중앙에서 시작 (총기 위치 기준)
+  const startX = window.innerWidth / 2;
+  const startY = window.innerHeight - 100;
+
+  bullet.style.left = `${startX}px`;
+  bullet.style.top = `${startY}px`;
+  document.body.appendChild(bullet);
+
+  // 거리 계산
+  const dx = targetX - startX;
+  const dy = targetY - startY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  // 속도 설정 (px/ms)
+  const speed = 1.5; // 조절 가능
+  const duration = distance / speed;
+
+  bullet.style.transition = `all ${duration}ms linear`;
+  setTimeout(() => {
+    bullet.style.left = `${targetX}px`;
+    bullet.style.top = `${targetY}px`;
+  }, 10);
+
+  // 애니 끝나면 제거
+  setTimeout(() => bullet.remove(), duration + 50);
+}
+canvas.addEventListener("click", (e) => {
+  if (isReloading || currentAmmo <= 0) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const targetX = e.clientX;
+  const targetY = e.clientY;
+
+  fireBullet(targetX, targetY);         // 총알 날아감 💥
+  shootTarget(targetX, targetY);        // 타겟 판정 (헤드샷/몸통샷)
+  playSound(guns[selectedGun].sound);   // 총소리
+  applyRecoil();                        // 반동
+  currentAmmo--;
+  updateAmmoUI();
+});
+<!-- 총구 플래시 (머즐 플래시) -->
+<img id="muzzleFlash" src="/effects/muzzle-flash.png"
+     class="hidden absolute bottom-24 right-14 w-16 pointer-events-none z-50 transition-opacity duration-75" />
+function showMuzzleFlash() {
+  const flash = document.getElementById("muzzleFlash");
+  flash.classList.remove("hidden");
+  flash.style.opacity = "1";
+
+  // 짧게 보여줬다가 바로 숨김
+  setTimeout(() => {
+    flash.style.opacity = "0";
+    setTimeout(() => flash.classList.add("hidden"), 75);
+  }, 50);
+}
+canvas.addEventListener("click", (e) => {
+  if (isReloading || currentAmmo <= 0) return;
+
+  const targetX = e.clientX;
+  const targetY = e.clientY;
+
+  fireBullet(targetX, targetY);        // 총알 날아감
+  shootTarget(targetX, targetY);       // 판정
+  playSound(guns[selectedGun].sound);  // 총소리
+  showMuzzleFlash();                   // 💥 섬광 효과
+  applyRecoil();                       // 반동
+  currentAmmo--;
+  updateAmmoUI();
+});
+<!-- 머즐 플래시 -->
+<img id="muzzleFlash" src="/effects/muzzle-flash.png"
+     class="hidden absolute bottom-24 right-14 w-16 pointer-events-none z-50 transition-opacity duration-75" />
+
+<!-- 연기 -->
+<img id="muzzleSmoke" src="/effects/smoke.png"
+     class="hidden absolute bottom-24 right-14 w-16 pointer-events-none z-40 opacity-80 transition-opacity duration-300" />
+
+<!-- 불꽃 -->
+<img id="muzzleFire" src="/effects/fire.png"
+     class="hidden absolute bottom-24 right-14 w-12 pointer-events-none z-40 transition-opacity duration-150" />
+function showGunEffects() {
+  const flash = document.getElementById("muzzleFlash");
+  const smoke = document.getElementById("muzzleSmoke");
+  const fire = document.getElementById("muzzleFire");
+
+  // 보이게 설정
+  flash.classList.remove("hidden");
+  smoke.classList.remove("hidden");
+  fire.classList.remove("hidden");
+
+  flash.style.opacity = "1";
+  smoke.style.opacity = "0.8";
+  fire.style.opacity = "1";
+
+  // 타이밍별 숨김 처리
+  setTimeout(() => flash.style.opacity = "0", 50);     // 섬광은 빠르게 사라짐
+  setTimeout(() => fire.style.opacity = "0", 100);     // 불꽃도 금방 사라짐
+  setTimeout(() => smoke.style.opacity = "0", 300);    // 연기는 천천히 사라짐
+
+  setTimeout(() => {
+    flash.classList.add("hidden");
+    fire.classList.add("hidden");
+    smoke.classList.add("hidden");
+  }, 400);
+}
+
+canvas.addEventListener("click", (e) => {
+  if (isReloading || currentAmmo <= 0) return;
+
+  const targetX = e.clientX;
+  const targetY = e.clientY;
+
+  fireBullet(targetX, targetY);
+  shootTarget(targetX, targetY);
+  playSound(guns[selectedGun].sound);
+  showGunEffects();        // 🔥 이펙트 실행
+  applyRecoil();
+  currentAmmo--;
+  updateAmmoUI();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.code === "KeyG") throwGrenade();
+  if (e.code === "KeyF") throwFlashbang();
+});
+function throwGrenade() {
+  const grenade = document.createElement("img");
+  grenade.src = "/effects/grenade.png";
+  grenade.className = "absolute w-10 transition-all duration-700";
+  grenade.style.left = "50%";
+  grenade.style.top = "80%";
+  grenade.style.transform = "translate(-50%, -50%)";
+
+  document.body.appendChild(grenade);
+
+  // 타겟 근처로 날아가게 (랜덤 위치)
+  const x = Math.random() * window.innerWidth * 0.8;
+  const y = Math.random() * window.innerHeight * 0.6;
+  setTimeout(() => {
+    grenade.style.left = `${x}px`;
+    grenade.style.top = `${y}px`;
+  }, 10);
+
+  // 💥 폭발
+  setTimeout(() => {
+    grenade.remove();
+    createExplosion(x, y);
+  }, 1000);
+}
+function createExplosion(x, y) {
+  const boom = document.createElement("img");
+  boom.src = "/effects/explosion.png";
+  boom.className = "absolute w-24 pointer-events-none";
+  boom.style.left = `${x}px`;
+  boom.style.top = `${y}px`;
+  boom.style.transform = "translate(-50%, -50%)";
+  document.body.appendChild(boom);
+
+  playSound("/sounds/explosion.mp3");
+
+  // 주변 타겟 제거
+  damageTargetsInRange(x, y, 100); // 100px 반경
+
+  setTimeout(() => boom.remove(), 400);
+}function throwFlashbang() {
+  const fb = document.createElement("img");
+  fb.src = "/effects/flashbang.png";
+  fb.className = "absolute w-10 transition-all duration-700";
+  fb.style.left = "50%";
+  fb.style.top = "80%";
+  fb.style.transform = "translate(-50%, -50%)";
+  document.body.appendChild(fb);
+
+  const x = Math.random() * window.innerWidth * 0.8;
+  const y = Math.random() * window.innerHeight * 0.6;
+  setTimeout(() => {
+    fb.style.left = `${x}px`;
+    fb.style.top = `${y}px`;
+  }, 10);
+
+  setTimeout(() => {
+    fb.remove();
+    triggerFlash(x, y);
+  }, 1000);
+}
+function triggerFlash(x, y) {
+  const flash = document.createElement("div");
+  flash.className = "fixed top-0 left-0 w-full h-full bg-white opacity-80 z-50";
+  document.body.appendChild(flash);
+
+  playSound("/sounds/flashbang.mp3");
+
+  // 타겟 일시 정지 or 눈뽕 효과
+  stunTargetsInRange(x, y, 150);
+
+  setTimeout(() => flash.remove(), 400); // 흰색 화면 잠깐
+}
+function damageTargetsInRange(x, y, range) {
+  targets.forEach(t => {
+    const dx = t.x - x;
+    const dy = t.y - y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < range) removeTarget(t); // 💥 제거
+  });
+}
+
+function stunTargetsInRange(x, y, range) {
+  targets.forEach(t => {
+    const dx = t.x - x;
+    const dy = t.y - y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < range) t.stunned = true;
+  });
+}
+let specialWeapon = "none";
+let isUsingMachineGun = false;
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "KeyM" && !isUsingMachineGun) {
+    activateMachineGun();
+  }
+});
+function activateMachineGun() {
+  specialWeapon = "machinegun";
+  isUsingMachineGun = true;
+
+  showMachineGunUI();
+  playSound("/sounds/machinegun-activate.mp3");
+
+  let duration = 5000; // 5초 동안 지속
+  let fireInterval = 100; // 0.1초 간격 자동 발사
+  let bulletsLeft = duration / fireInterval;
+
+  const interval = setInterval(() => {
+    if (bulletsLeft <= 0 || !isUsingMachineGun) {
+      clearInterval(interval);
+      deactivateMachineGun();
+      return;
+    }
+
+    // 자동으로 마우스 중앙 쏘기
+    const targetX = getNearestTargetX() || window.innerWidth / 2;
+    const targetY = getNearestTargetY() || window.innerHeight / 2;
+    fireBullet(targetX, targetY);
+    playSound("/sounds/machinegun.mp3");
+    applyRecoil(0.3);
+    showGunEffects(); // 불꽃 연기 섬광
+    bulletsLeft--;
+
+  }, fireInterval);
+}
+function deactivateMachineGun() {
+  isUsingMachineGun = false;
+  specialWeapon = "none";
+  hideMachineGunUI();
+  playSound("/sounds/machinegun-finish.mp3");
+}
+
+function getNearestTargetX() {
+  if (targets.length === 0) return null;
+  return targets[0].x;
+}
+function getNearestTargetY() {
+  if (targets.length === 0) return null;
+  return targets[0].y;
+}
+function showMachineGunUI() {
+  const ui = document.createElement("div");
+  ui.id = "machineGunHUD";
+  ui.innerText = "🧨 MACHINE GUN ACTIVE!";
+  ui.className = "fixed top-10 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-4 py-2 rounded-xl text-xl z-50 animate-pulse";
+  document.body.appendChild(ui);
+}
+function hideMachineGunUI() {
+  const ui = document.getElementById("machineGunHUD");
+  if (ui) ui.remove();
+let overheat = 0;          // 0~100
+let isOverheated = false;
+
+function autoFireMachineGun() {
+  if (isOverheated) return;
+
+  fireBullet(...);
+  showGunEffects();
+  overheat += 5;            // 발사마다 게이지 증가
+  updateOverheatBar();
+
+  if (overheat >= 100) {
+    triggerOverheat();
+  }
+}
+function triggerOverheat() {
+  isOverheated = true;
+  overheat = 100;
+  playSound("/sounds/overheat.mp3");
+  showOverheatWarning();
+  showOverheatFlames();   // 🔥 여기서 불남
+  shakeGun();
+
+  setTimeout(() => {
+    isOverheated = false;
+    overheat = 0;
+    updateOverheatBar();
+    hideOverheatWarning();
+    hideOverheatFlames();
+    playSound("/sounds/cooldown.mp3");
+  }, 4000); // 4초 동안 사용불가
+}
+<img id="overheatFlames" src="/effects/fire-big.png"
+     class="hidden absolute bottom-24 right-14 w-20 pointer-events-none z-40 animate-pulse" />
+function showOverheatFlames() {
+  document.getElementById("overheatFlames").classList.remove("hidden");
+}
+function hideOverheatFlames() {
+  document.getElementById("overheatFlames").classList.add("hidden");
+}
+function shakeGun() {
+  const gun = document.getElementById("gunImage");
+  gun.classList.add("animate-shake");
+  setTimeout(() => gun.classList.remove("animate-shake"), 600);
+}
+@keyframes shake {
+  0% { transform: translate(0px, 0px); }
+  25% { transform: translate(2px, -2px); }
+  50% { transform: translate(-2px, 2px); }
+  75% { transform: translate(2px, 2px); }
+  100% { transform: translate(0px, 0px); }
+}
+.animate-shake {
+  animation: shake 0.2s infinite;
+}
+function showOverheatWarning() {
+  const warn = document.createElement("div");
+  warn.id = "overheatWarning";
+  warn.className = "fixed top-24 left-1/2 transform -translate-x-1/2 bg-red-700 text-white px-4 py-2 rounded-xl text-lg z-50 animate-pulse";
+  warn.innerText = "⚠️ 과열! 머신건 냉각 중...";
+  document.body.appendChild(warn);
+}
+function hideOverheatWarning() {
+  const warn = document.getElementById("overheatWarning");
+  if (warn) warn.remove();
+}
+<div class="fixed top-4 right-4 w-40 bg-gray-600 rounded-full overflow-hidden z-50">
+  <div id="overheatBar" class="h-4 bg-red-500 w-0 transition-all duration-300"></div>
+</div>
+function updateOverheatBar() {
+  document.getElementById("overheatBar").style.width = `${overheat}%`;
+}
+
+function endGame(reason = "time") {
+  stopGameLoop();
+  showEndScreen(reason);
+  playSound("/sounds/game-over.mp3");
+}
+function showEndScreen(reason) {
+  const score = currentScore;
+  const message = reason === "time"
+    ? "⏰ 시간 종료!"
+    : reason === "death"
+      ? "💀 사망!"
+      : "🎯 목표 도달!";
+
+  const container = document.createElement("div");
+  container.className = "fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center text-white z-50";
+
+  container.innerHTML = `
+    <h1 class="text-4xl font-bold mb-4">${message}</h1>
+    <p class="text-2xl mb-6">🏆 점수: ${score}</p>
+    <button id="restartBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl">🔄 다시하기</button>
+  `;
+
+  document.body.appendChild(container);
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    container.remove();
+    restartGame();
+  });
+}
+<p>🎯 정확도: ${accuracy}%</p>
+<p>🔫 헤드샷 수: ${headshots}</p>
+<p>💥 몸통샷 수: ${bodyshots}</p>
+function restartGame() {
+  resetPlayer();
+  resetScore();
+  resetTargets();
+  resetTimer();
+  startGameLoop();
+}
+let remainingTime = 60; // 60초
+let timerInterval = null;
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    remainingTime--;
+    updateTimerUI(remainingTime);
+
+    if (remainingTime <= 0) {
+      clearInterval(timerInterval);
+      endGame("time"); // 종료 트리거
+    }
+  }, 1000);
+}
+function endGame(reason = "time") {
+  stopGameLoop(); // 타겟 스폰, 입력 등 중단
+  playSound("/sounds/game-over.mp3"); // 종료 사운드
+  showEndScreen(reason); // 결과창 띄움
+}
+function showEndScreen(reason) {
+  const message = reason === "time"
+    ? "⏰ 시간이 종료되었습니다!"
+    : "게임 종료";
+
+  const score = currentScore; // 현재 점수
+  const accuracy = calculateAccuracy(); // 정확도
+  const headshots = headshotCount;
+
+  const container = document.createElement("div");
+  container.className = "fixed inset-0 bg-black bg-opacity-80 text-white flex flex-col items-center justify-center z-50";
+
+  container.innerHTML = `
+    <h1 class="text-4xl font-bold mb-4">${message}</h1>
+    <p class="text-2xl mb-2">🏆 점수: ${score}</p>
+    <p class="text-lg mb-1">🎯 정확도: ${accuracy}%</p>
+    <p class="text-lg mb-6">💥 헤드샷: ${headshots}</p>
+    <button id="restartBtn" class="bg-blue-600 hover:bg-blue-800 px-5 py-2 rounded-xl text-white text-lg">🔄 다시 시작</button>
+  `;
+
+  document.body.appendChild(container);
+
+  document.getElementById("restartBtn").addEventListener("click", () => {
+    container.remove();
+    restartGame();
+  });
+}
+function calculateAccuracy() {
+  if (totalShots === 0) return 0;
+  return Math.round((successfulHits / totalShots) * 100);
+}
+function playSound(src) {
+  const audio = new Audio(src);
+  audio.play();
+}
+function animateScoreCount(targetScore) {
+  let displayedScore = 0;
+  const scoreEl = document.getElementById("finalScore");
+  
+  const interval = setInterval(() => {
+    displayedScore += Math.ceil((targetScore - displayedScore) / 8);
+    if (displayedScore >= targetScore) {
+      displayedScore = targetScore;
+      clearInterval(interval);
+    }
+    scoreEl.textContent = `🏆 점수: ${displayedScore}`;
+  }, 30);
+}
+<p id="finalScore" class="text-2xl mb-2">🏆 점수: 0</p>
+function saveToRanking(nickname, score) {
+  const key = "rankingBoard";
+  let ranking = JSON.parse(localStorage.getItem(key)) || [];
+
+  ranking.push({ nickname, score });
+  ranking.sort((a, b) => b.score - a.score); // 높은 점수 순
+  ranking = ranking.slice(0, 10); // 상위 10명 저장
+
+  localStorage.setItem(key, JSON.stringify(ranking));
+}
+saveToRanking(currentNickname, currentScore);
+function showRankingBoard() {
+  const ranking = JSON.parse(localStorage.getItem("rankingBoard")) || [];
+
+  const listItems = ranking.map((entry, i) => 
+    `<li class="mb-1">${i + 1}. ${entry.nickname} - ${entry.score}점</li>`
+  ).join("");
+
+  const board = document.createElement("div");
+  board.className = "fixed top-8 right-8 bg-white text-black rounded-xl shadow-xl p-4 z-40 max-w-sm";
+
+  board.innerHTML = `
+    <h2 class="text-xl font-bold mb-2">🏅 랭킹 Top 10</h2>
+    <ul class="text-base">${listItems}</ul>
+  `;
+
+  document.body.appendChild(board);
+}
+// 게임 시작 시
+let currentNickname = localStorage.getItem("nickname") || "플레이어";
+function showRankingBoard() {
+  const ranking = JSON.parse(localStorage.getItem("rankingBoard")) || [];
+
+  const listItems = ranking.map((entry, i) => {
+    const isFirst = i === 0;
+    return `
+      <li class="mb-1 ${isFirst ? 'text-yellow-500 font-bold text-lg flex items-center gap-1' : ''}">
+        ${isFirst ? '🥇' : `${i + 1}.`} ${entry.nickname} - ${entry.score}점
+      </li>
+    `;
+  }).join("");
+
+  const board = document.createElement("div");
+  board.className = "fixed top-8 right-8 bg-white text-black rounded-xl shadow-xl p-4 z-40 max-w-sm";
+
+  board.innerHTML = `
+    <h2 class="text-xl font-bold mb-2">🏅 랭킹 Top 10</h2>
+    <ul class="text-base">${listItems}</ul>
+  `;
+
+  document.body.appendChild(board);
+}
+🥇 playerOne - 990점       ← 노란색, 굵게, 큼
+2. coolGuy - 870점
+3. sniperQueen - 830점
+...
+[로비 화면] → [게임 시작] → [게임 진행]  
+→ ⏱️ [시간 종료 or 사망] → [결과 요약 + 랭킹 보드]  
+→ 🔄 [“다시하기” 누르면 로비로 돌아옴]
+<div id="lobbyScreen" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-black text-white z-40 hidden">
+  <h1 class="text-4xl font-bold mb-6">🔫 총게임</h1>
+  <input id="nicknameInput" type="text" placeholder="닉네임을 입력하세요" class="mb-4 px-4 py-2 text-black rounded-xl">
+  <button id="startGameBtn" class="bg-green-500 hover:bg-green-700 px-6 py-3 rounded-xl text-lg">🎮 게임 시작</button>
+</div>
+function restartGame() {
+  // 게임 상태 초기화
+  resetGameVariables();
+  resetUI();
+  
+  // 결과창 제거
+  const resultOverlay = document.querySelector("#resultOverlay");
+  if (resultOverlay) resultOverlay.remove();
+
+  // 로비 보여주기
+  document.getElementById("lobbyScreen").classList.remove("hidden");
+}
+document.getElementById("startGameBtn").addEventListener("click", () => {
+  const nickname = document.getElementById("nicknameInput").value || "플레이어";
+  localStorage.setItem("nickname", nickname);
+  currentNickname = nickname;
+
+  document.getElementById("lobbyScreen").classList.add("hidden");
+  startGame(); // 게임 루프 진입
+});
+<button id="restartBtn" class="bg-blue-600 hover:bg-blue-800 px-5 py-2 rounded-xl text-white text-lg">🔁 로비로</button>
+[로비 진입] → 닉네임 & 총기 선택  
+→ [게임 시작] → 플레이  
+→ [게임 종료] → 결과 표시 + 랭킹 저장  
+→ [🔁 로비로 돌아가기] → 다시 시작 가능
+function resetGameVariables() {
+  // 점수, 타이머, 탄약 등 초기화
+  currentScore = 0;
+  remainingTime = 60;
+  totalShots = 0;
+  successfulHits = 0;
+  headshotCount = 0;
+  isReloading = false;
+  ammo = defaultAmmo;
+}
+function resetUI() {
+  // 타겟 제거
+  document.querySelectorAll(".target").forEach(el => el.remove());
+
+  // UI 요소 리셋
+  updateScoreUI(0);
+  updateTimerUI(remainingTime);
+  updateAmmoUI(ammo);
+
+  // 게임 배경, 이펙트 제거
+  removeGameEffects();
+}
+document.getElementById("restartBtn").addEventListener("click", () => {
+  restartGame(); // 로비로 이동 + 초기화
+});
+document.getElementById("startGameBtn").addEventListener("click", () => {
+  currentNickname = document.getElementById("nicknameInput").value || "플레이어";
+  localStorage.setItem("nickname", currentNickname);
+
+  document.getElementById("lobbyScreen").classList.add("hidden");
+
+  startGame(); // 게임 시작!
+});
+
+function startGame() {
+  resetGameVariables();
+  resetUI();
+  setupGameScene();
+  spawnTargets();
+  startTimer();
+  enablePlayerControls();
+}
+let currentLevel = 1;
+function updateLevel(score) {
+  let newLevel = 1;
+
+  if (score >= 3000) newLevel = 5;
+  else if (score >= 2000) newLevel = 4;
+  else if (score >= 1000) newLevel = 3;
+  else if (score >= 500)  newLevel = 2;
+
+  if (newLevel !== currentLevel) {
+    currentLevel = newLevel;
+    applyLevelChanges(currentLevel);
+    showLevelUpMessage(currentLevel);
+  }
+}
+function applyLevelChanges(level) {
+  switch(level) {
+    case 2:
+      targetSpeed = 1.2;
+      break;
+    case 3:
+      targetSpeed = 1.5;
+      spawnRate = 800;
+      break;
+    case 4:
+      targetSpeed = 1.8;
+      spawnRate = 600;
+      break;
+    case 5:
+      targetSpeed = 2.2;
+      spawnRate = 400;
+      spawnMultipleTargets = true;
+      break;
+    default:
+      targetSpeed = 1.0;
+      spawnRate = 1000;
+  }
+}
+function showLevelUpMessage(level) {
+  const msg = document.createElement("div");
+  msg.className = "fixed top-1/3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black px-6 py-3 text-2xl font-bold rounded-xl shadow-xl z-50";
+  msg.innerText = `📈 레벨 ${level} 도달!`;
+
+  document.body.appendChild(msg);
+
+  setTimeout(() => msg.remove(), 2000);
+}
+function increaseScore(points, isHeadshot) {
+  const bonus = isHeadshot ? points * 2 : points;
+  currentScore += bonus;
+  updateScoreUI(currentScore);
+  updateLevel(currentScore); // 여기 추가!
+}
+let unlockedGuns = ["pistol"]; // 기본은 권총만
+
+function applyLevelChanges(level) {
+  switch(level) {
+    case 2:
+      targetSpeed = 1.2;
+      unlockGun("rifle");
+      break;
+    case 3:
+      targetSpeed = 1.5;
+      unlockGun("shotgun");
+      break;
+    case 4:
+      targetSpeed = 1.8;
+      unlockGun("sniper");
+      break;
+    case 5:
+      targetSpeed = 2.2;
+      unlockGun("machinegun");
+      break;
+    default:
+      targetSpeed = 1.0;
+  }
+}
+function unlockGun(gunName) {
+  if (!unlockedGuns.includes(gunName)) {
+    unlockedGuns.push(gunName);
+    showUnlockMessage(gunName);
+    updateGunSelectUI();
+  }
+}
+function showUnlockMessage(gunName) {
+  const names = {
+    rifle: "소총",
+    shotgun: "샷건",
+    sniper: "저격총",
+    machinegun: "머신건"
+  };
+
+  const msg = document.createElement("div");
+  msg.className = "fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 text-2xl font-bold rounded-xl shadow-lg z-50";
+  msg.innerText = `🔓 ${names[gunName]} 해금!`;
+
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2500);
+}
+function updateGunSelectUI() {
+  const gunSelect = document.getElementById("gunSelect");
+  gunSelect.innerHTML = ""; // 초기화
+
+  unlockedGuns.forEach(gun => {
+    const option = document.createElement("option");
+    option.value = gun;
+    option.textContent = gunNameToLabel(gun);
+    gunSelect.appendChild(option);
+  });
+}
+
+function gunNameToLabel(gun) {
+  return {
+    pistol: "권총",
+    rifle: "소총",
+    shotgun: "샷건",
+    sniper: "저격총",
+    machinegun: "머신건"
+  }[gun];
+}
+window.addEventListener("DOMContentLoaded", () => {
+  updateGunSelectUI();
+});
+let currentLevel = 1;
+let unlockedGuns = ["pistol"];
+function updateLevel(score) {
+  let newLevel = 1;
+
+  if (score >= 1000) newLevel = 3;
+  else if (score >= 500) newLevel = 2;
+
+  if (newLevel !== currentLevel) {
+    currentLevel = newLevel;
+    applyLevelGuns(currentLevel);
+    showLevelUpMessage(currentLevel);
+  }
+}
+function applyLevelGuns(level) {
+  if (level === 2 && !unlockedGuns.includes("rifle")) {
+    unlockedGuns.push("rifle");
+    showUnlockMessage("rifle");
+    updateGunSelectUI();
+  } else if (level === 3 && !unlockedGuns.includes("shotgun")) {
+    unlockedGuns.push("shotgun");
+    showUnlockMessage("shotgun");
+    updateGunSelectUI();
+  }
+}
+function showUnlockMessage(gunName) {
+  const label = {
+    rifle: "소총",
+    shotgun: "샷건"
+  }[gunName];
+
+  const msg = document.createElement("div");
+  msg.className = "fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-2xl px-6 py-3 rounded-xl shadow-lg z-50";
+  msg.innerText = `🔓 ${label} 해금!`;
+
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2500);
+}
+function updateGunSelectUI() {
+  const select = document.getElementById("gunSelect");
+  select.innerHTML = "";
+
+  unlockedGuns.forEach(gun => {
+    const option = document.createElement("option");
+    option.value = gun;
+    option.textContent = gunNameToLabel(gun);
+    select.appendChild(option);
+  });
+}
+
+function gunNameToLabel(gun) {
+  return {
+    pistol: "권총",
+    rifle: "소총",
+    shotgun: "샷건"
+  }[gun];
+}
+<style>
+@keyframes unlockPulse {
+  0%   { transform: scale(1); opacity: 0.8; }
+  50%  { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes unlockExplode {
+  0%   { transform: scale(0); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.unlock-effect {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  padding: 20px 40px;
+  background: radial-gradient(circle, gold, orange);
+  color: white;
+  font-weight: bold;
+  border-radius: 20px;
+  box-shadow: 0 0 20px gold;
+  animation: unlockPulse 1.2s ease-in-out infinite;
+  z-index: 9999;
+}
+
+.unlock-burst {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255,255,0,0.6), transparent);
+  border-radius: 50%;
+  animation: unlockExplode 0.6s ease-out forwards;
+  z-index: 9998;
+}
+</style>
+function showUnlockEffect(gunName) {
+  const label = {
+    rifle: "소총",
+    shotgun: "샷건"
+  }[gunName];
+
+  // 배경 이펙트 (burst)
+  const burst = document.createElement("div");
+  burst.className = "unlock-burst";
+  document.body.appendChild(burst);
+  setTimeout(() => burst.remove(), 700);
+
+  // 텍스트 이펙트
+  const msg = document.createElement("div");
+  msg.className = "unlock-effect";
+  msg.textContent = `🔓 ${label} 해금!`;
+
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2000);
+
+  // 선택: 해금 사운드 효과
+  const sfx = new Audio("sfx/unlock.mp3");
+  sfx.volume = 0.8;
+  sfx.play();
+}
+// 기존 코드에서 이걸로 바꾸기
+unlockGun("rifle"); // 🔁
+showUnlockEffect("rifle"); // ✅
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>총게임 온라인</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #111;
+      color: #fff;
+      overflow: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: #222;
+      border-bottom: 2px solid #444;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .game-area {
+      width: 90vw;
+      height: 60vh;
+      border: 2px solid #444;
+      margin: 2rem 0;
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1597175844265-f27d238ba6ed?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
+      overflow: hidden;
+    }
+    .btn {
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.3s;
+    }
+    .btn:hover {
+      background: #0099cc;
+      transform: scale(1.05);
+    }
+    .footer {
+      position: absolute;
+      bottom: 1rem;
+      width: 100%;
+      text-align: center;
+      color: #777;
+    }
+    .start-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2rem 4rem;
+      border: 2px solid #00bfff;
+      border-radius: 1rem;
+      display: none;
+      z-index: 10;
+    }
+    .target {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: red;
+      border-radius: 50%;
+      cursor: crosshair;
+    }
+    .score-display {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎯 온라인 총게임</h1>
+    <p>닉네임 입력 후 총기 선택, 친구들과 점수 대결!</p>
+  </header>
+  <div class="container">
+    <input type="text" id="nickname" placeholder="닉네임 입력" style="padding: 0.5rem; font-size: 1rem;" />
+    <select id="gunSelect" style="margin-top: 1rem; padding: 0.5rem; font-size: 1rem;"></select>
+    <button class="btn" onclick="startGame()">🎮 게임 시작</button>
+    <div class="game-area" id="gameArea">
+      <div class="start-message" id="startMsg">게임 시작!</div>
+      <div class="score-display" id="scoreDisplay">점수: 0</div>
+    </div>
+  </div>
+  <div class="footer">
+    &copy; 2025 총게임 온라인 | 다른 사람들도 이 링크로 플레이 가능! 🎮
+  </div>
+
+  <script>
+    let unlockedGuns = ['pistol', 'rifle', 'shotgun'];
+    let score = 0;
+    let gameInterval;
+
+    function gunNameToLabel(gun) {
+      return {
+        pistol: "권총",
+        rifle: "소총",
+        shotgun: "샷건"
+      }[gun] || gun;
+    }
+
+    function updateGunSelectUI() {
+      const select = document.getElementById("gunSelect");
+      select.innerHTML = "";
+      unlockedGuns.forEach((gun) => {
+        const option = document.createElement("option");
+        option.value = gun;
+        option.textContent = gunNameToLabel(gun);
+
+        if (gun !== 'pistol') {
+          option.textContent += " 🆕";
+        }
+
+        select.appendChild(option);
+      });
+    }
+
+    function startGame() {
+      const nick = document.getElementById("nickname").value || "플레이어";
+      const gun = document.getElementById("gunSelect").value;
+      const startMsg = document.getElementById("startMsg");
+      const gameArea = document.getElementById("gameArea");
+      const scoreDisplay = document.getElementById("scoreDisplay");
+
+      startMsg.textContent = `${nick}님, ${gunNameToLabel(gun)}로 게임 시작!`;
+      startMsg.style.display = 'block';
+      score = 0;
+      scoreDisplay.textContent = `점수: ${score}`;
+
+      setTimeout(() => {
+        startMsg.style.display = 'none';
+        if (gameInterval) clearInterval(gameInterval);
+        gameInterval = setInterval(spawnTarget, 1500);
+      }, 2000);
+    }
+
+    function spawnTarget() {
+      const gameArea = document.getElementById("gameArea");
+      const target = document.createElement("div");
+      target.className = 'target';
+      target.style.top = Math.random() * (gameArea.clientHeight - 60) + 'px';
+      target.style.left = Math.random() * (gameArea.clientWidth - 60) + 'px';
+      target.onclick = () => {
+        score += 10;
+        document.getElementById("scoreDisplay").textContent = `점수: ${score}`;
+        gameArea.removeChild(target);
+      };
+      gameArea.appendChild(target);
+
+      setTimeout(() => {
+        if (gameArea.contains(target)) {
+          gameArea.removeChild(target);
+        }
+      }, 3000);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateGunSelectUI();
+    });
+  </script>
+</body>
+</html>
+
